@@ -1,30 +1,39 @@
-Fluentd��Elasticsearch�Ƀ��O��o�^����
+FluentdでElasticsearchにログを登録する
 
-���쐬
-�Evm��CentOS7������
-�Evm��Tera Term�Ń��O�C�����Aprojects/fluentd �f�B���N�g���쐬�B�����Ƀ\�[�X��ݒu
-�E�ȉ������s
+環境作成
+・vmにCentOS7を入れる
+・vmにTera Termでログインし、projects/fluentd ディレクトリ作成。直下にソースを設置
+・以下を実行
   docker-compose down
   docker-compose up
-apache�AElasticsearch�AFluentd�AKibana ���N������
+apache、Elasticsearch、Fluentd、Kibana が起動する
 
-�Q�lURL
+参考URL
 https://docs.fluentd.org/container-deployment/docker-compose
 
 
-�Eelasticsearch�Ƀ��O��o�^����
-/root/projects/fluentd/fluentd/conf/aaa �t�@�C�����쐬���A
+・elasticsearchにログを登録する
+/root/projects/fluentd/fluentd/work/aaa ファイルを作成し、
 ::1 - - [11/May/2020:14:35:04 +0900] "OPTIONS * HTTP/1.0" 200 - 121 /xxx/xxx/xxxx/* "-" "Apache/2.4.6 (CentOS) (internal dummy connection)" "-"
-�������ĕۑ�
+を書いて保存
 cat aaa > tail.log
-�����s����ƁAelasticsearch�ɕۑ������
+を実行すると、elasticsearchに保存される
 
-elasticsearch�͋N�����x���̂ŁA
+elasticsearchは起動が遅いので、
 curl -XGET localhost:9200/_cat/indices?v
-�Ŋm�F
+で確認
 
 yellow open   fluentd-20200514     7_CNEaYZQWeJ0URWfZZOeg   1   1          8            0     31.5kb         31.5kb
-�̂悤�Ȃ��̂��o�^����Ă����OK
+のようなものが登録されていればOK
 
-���g���m�F����ɂ�
+中身を確認するには
 curl -XGET localhost:9200/fluentd-20200514/_search?pretty
+
+
+・fluentdサーバからシェルを叩いてelasticsearchにログを登録する
+fluentdサーバにログインし、
+cd /fluentd/work
+sh LOG-ROTATION.sh
+
+すると，/fluentd/work/logs
+にある更新日付が１日前のファイルの中身がelasticsearchに登録される
