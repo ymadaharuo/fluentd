@@ -7,7 +7,7 @@ HOMEDIR=/fluentd/work
 
 # -------------------------------------------------------------------------------------------------------------------- #
 
-STORAGE=${HOMEDIR}/logs
+STORAGE=${HOMEDIR}/logs/
 TAILLOG=${HOMEDIR}/tail.log
 
 # tail.logファイルの中身を消す
